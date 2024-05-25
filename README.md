@@ -12,7 +12,7 @@ Copy the code inside the [schema.sql](schema.sql) file, paste it into MySQL Work
 
 ## Exercises
 ### 1. Create a Songs Table
-[Solution](solutions/1.sql)
+
 
 This table should be called `songs` and have four properties with these exact names.
 1. `id`: An integer that is the primary key, and auto increments.
@@ -22,16 +22,17 @@ This table should be called `songs` and have four properties with these exact na
 
 
 ## My solution: 
+```
 CREATE TABLE songs (
 	id SERIAL PRIMARY KEY, 
 	name VARCHAR(255) NOT NULL, 
 	length FLOAT NOT NULL, 
 	album_id INT REFERENCES albums(id)
-); 
+);
+```
 
 
 ### 2. Select only the Names of all the Bands
-[Solution](solutions/2.sql)
 
 Change the name of the column the data returns to `Band Name`
 
@@ -46,10 +47,11 @@ Change the name of the column the data returns to `Band Name`
 | Dream Theater     | 
 
 ## My solution: 
+```
 SELECT name AS "Band name" from bands;
+```
 
 ### 3. Select the Oldest Album
-[Solution](solutions/3.sql)
 
 Make sure to only return one result from this query, and that you are not returning any albums that do not have a release year.
 
@@ -57,8 +59,18 @@ Make sure to only return one result from this query, and that you are not return
 |----|------------------------|--------------|---------| 
 | 5  | ...And Justice for All | 1988         | 2       | 
 
+
+## MY SOLUTION 
+```
+SELECT id, name, release_year, band_id 
+FROM albums 
+WHERE release_year is NOT NULL 
+ORDER BY release_year 
+LIMIT 1;
+```
+
 ### 4. Get all Bands that have Albums
-[Solution](solutions/4.sql)
+
 
 There are multiple different ways to solve this problem, but they will all involve a join.
 
@@ -73,6 +85,15 @@ Return the band name as `Band Name`.
 | Death             | 
 | Van Canto         | 
 
+## My Solution 
+```
+SELECT DISTINCT bands.name as "Bands Name"
+FROM albums INNER JOIN bands 
+ON albums.band_id = bands.id
+WHERE albums is not null;
+```
+
+
 ### 5. Get all Bands that have No Albums
 [Solution](solutions/5.sql)
 
@@ -83,6 +104,14 @@ Return the band name as `Band Name`.
 | Band Name     | 
 |---------------| 
 | Dream Theater | 
+
+## My Solution 
+```
+SELECT bands.name AS "Bands name"
+FROM bands LEFT JOIN albums 
+ON bands.id = albums.band_id
+WHERE albums.id IS NULL;
+```
 
 ### 6. Get the Longest Album
 [Solution](solutions/6.sql)
