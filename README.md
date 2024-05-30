@@ -131,15 +131,41 @@ Set the release year to 1986.
 
 You may run into an error if you try to update the release year by using `release_year IS NULL` in the WHERE statement of your UPDATE. This is because MySQL Workbench by default will not let you update a table that has a primary key without using the primary key in the UPDATE statement. This is a good thing since you almost never want to update rows without using the primary key, so to get around this error make sure to use the primary key of the row you want to update in the WHERE of the UPDATE statement.
 
+## My Solution: 
+```
+UPDATE albums
+SET release_year=1986 WHERE release_year IS NULL AND id=4;
+```
+
 ### 8. Insert a record for your favorite Band and one of their Albums
 [Solution](solutions/8.sql)
 
 If you performed this correctly you should be able to now see that band and album in your tables.
 
+## My Solution: 
+```
+INSERT INTO bands (name) VALUES ('The Eagles'); 
+
+SELECT id FROM bands WHERE name='The Eagles' //returns 8. 
+
+INSERT INTO albums (name, release_year, band_id) 
+VALUES ('One of These Nights', 1975, 8)
+```
+
 ### 9. Delete the Band and Album you added in #8
 [Solution](solutions/9.sql)
 
 The order of how you delete the records is important since album has a foreign key to band.
+
+## My Solution: 
+```
+-- need to delete albums first, because we don't have on Delete Cascade set, and albums has Bands as a foreign key.
+SELECT id from albums where name='One of These Nights'; 
+DELETE from albums WHERE id=19;
+
+SELECT id FROM bands WHERE name='The Eagles'; 
+DELETE FROM bands WHERE id=8; 
+```
 
 ### 10. Get the Average Length of all Songs
 [Solution](solutions/10.sql)
@@ -149,6 +175,12 @@ Return the average length as `Average Song Duration`.
 | Average Song Duration | 
 |-----------------------| 
 | 5.352472513259112     | 
+
+## My Solution: 
+```
+-- For some weird reason, in Postgres, the as alias needs to be covered with "", and colNames as ''
+SELECT AVG(length) as "Average Song Duration" FROM songs; 
+```
 
 
 ### 11. Select the longest Song off each Album
