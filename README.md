@@ -107,7 +107,7 @@ Return the band name as `Band Name`.
 
 ## My Solution 
 ```
-SELECT bands.name AS "Bands name"
+SELECT DISTINCT bands.name AS "Band name"
 FROM bands LEFT JOIN albums 
 ON bands.id = albums.band_id
 WHERE albums.id IS NULL;
@@ -123,6 +123,16 @@ Return the album name as `Name`, the album release year as `Release Year`, and t
 | Name           | Release Year | Duration          | 
 |----------------|--------------|-------------------| 
 | Death Magnetic | 2008         | 74.76666593551636 | 
+
+## My Solution: 
+```
+-- Remember to put albums.name instead of name because the call to name can be ambiguous. 
+SELECT albums.name, release_year, SUM(songs.length) AS "duration"
+FROM albums INNER JOIN songs ON albums.id=songs.album_id
+GROUP BY albums.id
+ORDER BY duration DESC
+LIMIT 1; 
+```
 
 ### 7. Update the Release Year of the Album with no Release Year
 [Solution](solutions/7.sql)
@@ -209,6 +219,13 @@ Return the album name as `Album`, the album release year as `Release Year`, and 
 | Break the Silence           | 2011         | 6.15     | 
 | Tribe of Force              | 2010         | 8.38333  | 
 
+## My Solution: 
+```
+SELECT albums.name, release_year, MAX(songs.length) as "Duration"
+FROM albums JOIN songs ON albums.id = songs.album_id
+GROUP BY albums.id; 
+```
+
 ### 12. Get the number of Songs for each Band
 [Solution](solutions/12.sql)
 
@@ -224,3 +241,12 @@ Return the band name as `Band`, the number of songs as `Number of Songs`.
 | Within Temptation | 30              | 
 | Death             | 27              | 
 | Van Canto         | 32              | 
+
+## My Solution: 
+```
+-- we need to perform two joins here, since we need to link the band to the songs
+SELECT bands.name, COUNT(songs.id) as "Number of Songs" 
+FROM bands INNER JOIN albums ON bands.id = albums.band_id 
+INNER JOIN songs on albums.id = songs.album_id
+GROUP BY bands.id; 
+```
